@@ -91,7 +91,7 @@ html,body{height:100%;font-family:'Noto Sans SC',sans-serif;background:var(--bg)
 .picker-cancel,.picker-confirm{background:none;border:none;cursor:pointer;font-family:inherit;font-size:14px}
 .picker-cancel{color:#999}.picker-confirm{color:var(--theme-color);font-weight:600}
 .picker-body{display:flex;height:220px;position:relative;padding:0 10px}
-.picker-body::before{content:'';position:absolute;left:10px;right:10px;top:88px;height:44px;border-top:1px solid #e8e8e8;border-bottom:1px solid #e8e8e8;background:rgba(255,107,157,0.04);z-index:2;pointer-events:none;border-radius:8px}
+.picker-body::before{content:'';position:absolute;left:10px;right:10px;top:88px;height:44px;border-top:1px solid #e8e8e8;border-bottom:1px solid #e8e8e8;background:rgba(255,255,157,0.04);z-index:2;pointer-events:none;border-radius:8px}
 .picker-column{flex:1;height:100%;overflow-y:auto;scroll-snap-type:y mandatory;-webkit-overflow-scrolling:touch}
 .picker-column::-webkit-scrollbar{display:none}
 .picker-item{height:44px;display:flex;align-items:center;justify-content:center;font-size:16px;color:#999;scroll-snap-align:center;cursor:pointer;transition:all .15s;user-select:none}
@@ -128,40 +128,41 @@ html,body{height:100%;font-family:'Noto Sans SC',sans-serif;background:var(--bg)
 /* ============================= */
 /* ===== DISPLAY MODE ========== */
 /* ============================= */
-#displayMode{display:none;position:fixed;inset:0;z-index:1000;background:#000}
+#displayMode{display:none;position:fixed;inset:0;z-index:1000;overflow:hidden}
 #displayMode.show{display:block}
 #displayCanvas{position:absolute;inset:0;width:100%;height:100%}
 
-/* Page 1: Opening splash */
-.display-page1{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:3;pointer-events:none;transition:opacity 1s ease}
-.display-page1.fade-out{opacity:0;pointer-events:none}
-.display-page1 .splash-emoji{font-size:clamp(50px,12vw,80px);opacity:0;filter:drop-shadow(0 4px 20px rgba(0,0,0,0.3))}
-.display-page1 .splash-title{font-family:'ZCOOL KuaiLe',cursive;font-size:clamp(48px,14vw,96px);color:#fff;text-shadow:0 6px 30px rgba(0,0,0,0.4),0 0 60px rgba(255,255,255,0.15);opacity:0;letter-spacing:8px;margin-top:10px}
-.display-page1 .splash-sub{font-size:clamp(16px,4vw,24px);color:rgba(255,255,255,0.7);opacity:0;margin-top:12px;letter-spacing:4px}
-.display-page1 .splash-name{font-family:'ZCOOL KuaiLe',cursive;font-size:clamp(24px,6vw,40px);color:#fff;opacity:0;text-shadow:0 3px 15px rgba(0,0,0,0.3);margin-top:20px}
-.display-page1 .splash-tap{position:absolute;bottom:50px;font-size:14px;color:rgba(255,255,255,0.5);opacity:0;pointer-events:auto;cursor:pointer;animation:tapPulse 1.5s ease-in-out infinite}
-@keyframes tapPulse{0%,100%{opacity:.3;transform:translateY(0)}50%{opacity:.7;transform:translateY(-5px)}}
+/* Phase container */
+.d-phase{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:3;pointer-events:none;opacity:0;transition:opacity 0.8s ease}
+.d-phase.active{opacity:1}
 
-/* Page 2: Blessing content */
-.display-page2{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 24px;text-align:center;z-index:2;pointer-events:none;opacity:0;transition:opacity 1s ease}
-.display-page2.show{opacity:1}
-.display-page2 .d-cake{font-size:clamp(50px,12vw,80px);opacity:0;margin-bottom:10px}
-.display-page2 .d-greeting{font-family:'ZCOOL KuaiLe',cursive;font-size:clamp(28px,8vw,48px);color:#fff;text-shadow:0 4px 20px rgba(0,0,0,0.3);opacity:0;margin-bottom:8px}
-.display-page2 .d-name{font-family:'ZCOOL KuaiLe',cursive;font-size:clamp(24px,6vw,40px);color:#fff;text-shadow:0 3px 15px rgba(0,0,0,0.3);opacity:0;margin-bottom:6px}
-.display-page2 .d-date{font-size:clamp(15px,3.5vw,22px);color:rgba(255,255,255,0.8);opacity:0;margin-bottom:30px}
-.display-page2 .d-blessing{font-size:clamp(18px,4.5vw,26px);color:rgba(255,255,255,0.95);line-height:1.8;max-width:500px;opacity:0;text-shadow:0 2px 10px rgba(0,0,0,0.2)}
-.display-page2 .d-sender{font-size:clamp(13px,3vw,17px);color:rgba(255,255,255,0.6);margin-top:30px;opacity:0}
-.display-page2 .d-divider{width:60px;height:2px;background:rgba(255,255,255,0.3);margin:20px auto;opacity:0;border-radius:1px}
+/* Phase 1: Hi [name] */
+.d-phase1 .hi-text{font-family:'ZCOOL KuaiLe',cursive;font-size:clamp(36px,10vw,72px);color:#fff;text-shadow:0 0 30px rgba(255,255,255,0.4),0 4px 20px rgba(0,0,0,0.15);opacity:0;letter-spacing:4px}
+.d-phase1 .hi-name{font-family:'ZCOOL KuaiLe',cursive;font-size:clamp(48px,14vw,100px);color:#fff;text-shadow:0 0 40px rgba(255,255,255,0.5),0 4px 24px rgba(0,0,0,0.2);opacity:0;margin-top:10px;letter-spacing:6px}
 
+/* Phase 2: 生日快乐 */
+.d-phase2 .bd-text{font-family:'ZCOOL KuaiLe',cursive;font-size:clamp(56px,16vw,120px);color:#fff;text-shadow:0 0 50px rgba(255,255,255,0.5),0 6px 30px rgba(0,0,0,0.2);opacity:0;letter-spacing:12px}
+
+/* Phase 3: Blessing content */
+.d-phase3{padding:40px 24px;text-align:center}
+.d-phase3 .p3-cake{opacity:0;margin-bottom:12px}
+.d-phase3 .p3-greeting{font-family:'ZCOOL KuaiLe',cursive;font-size:clamp(28px,8vw,48px);color:#fff;text-shadow:0 4px 20px rgba(0,0,0,0.2);opacity:0;margin-bottom:8px}
+.d-phase3 .p3-name{font-family:'ZCOOL KuaiLe',cursive;font-size:clamp(22px,6vw,38px);color:#fff;text-shadow:0 3px 15px rgba(0,0,0,0.15);opacity:0;margin-bottom:4px}
+.d-phase3 .p3-date{font-size:clamp(14px,3.5vw,20px);color:rgba(255,255,255,0.75);opacity:0;margin-bottom:20px}
+.d-phase3 .p3-divider{width:60px;height:2px;background:rgba(255,255,255,0.3);margin:16px auto;opacity:0;border-radius:1px}
+.d-phase3 .p3-blessing{font-size:clamp(17px,4.2vw,24px);color:rgba(255,255,255,0.95);line-height:1.9;max-width:500px;opacity:0;text-shadow:0 2px 10px rgba(0,0,0,0.15)}
+.d-phase3 .p3-sender{font-size:clamp(13px,3vw,17px);color:rgba(255,255,255,0.6);margin-top:24px;opacity:0}
+
+/* Phase 4: Cake illustration */
+.d-phase4 .cake-wrap{opacity:0;position:relative}
+.d-phase4 .cake-canvas{display:block}
+.d-phase4 .cake-text{font-family:'ZCOOL KuaiLe',cursive;font-size:clamp(22px,6vw,36px);color:#fff;text-shadow:0 3px 15px rgba(0,0,0,0.15);opacity:0;margin-top:16px;letter-spacing:3px}
+.d-phase4 .cake-like{margin-top:20px;opacity:0;pointer-events:auto;cursor:pointer;background:rgba(255,255,255,0.2);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,0.3);color:#fff;padding:8px 24px;border-radius:20px;font-size:14px;font-family:inherit;transition:all .25s}
+.d-phase4 .cake-like:hover{background:rgba(255,255,255,0.35)}
+.d-phase4 .cake-like.liked{background:rgba(255,100,130,0.4);border-color:rgba(255,100,130,0.5)}
+
+/* Display controls */
 .display-replay{position:absolute;bottom:40px;left:50%;transform:translateX(-50%);z-index:10;pointer-events:auto;background:rgba(255,255,255,0.15);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,0.25);color:#fff;padding:10px 28px;border-radius:24px;font-size:14px;font-family:inherit;cursor:pointer;transition:all .25s;opacity:0;display:none}
-
-/* Page 3: Blessing overflow */
-.display-page3{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 24px;text-align:center;z-index:2;pointer-events:none;opacity:0;transition:opacity 1s ease}
-.display-page3.show{opacity:1}
-.display-page3 .p3-blessing{font-size:clamp(18px,4.5vw,26px);color:rgba(255,255,255,0.95);line-height:1.9;max-width:500px;opacity:0;text-shadow:0 2px 10px rgba(0,0,0,0.2)}
-.display-page3 .p3-sender{font-size:clamp(15px,3.5vw,20px);color:rgba(255,255,255,0.7);margin-top:40px;opacity:0}
-.display-page3 .p3-heart{font-size:clamp(40px,10vw,60px);opacity:0;margin-bottom:20px}
-.display-page3 .p3-tap{position:absolute;bottom:50px;font-size:14px;color:rgba(255,255,255,0.5);opacity:0;pointer-events:auto;cursor:pointer}
 .display-replay.show{opacity:1;display:block}
 .display-replay:hover{background:rgba(255,255,255,0.25)}
 .display-music{position:absolute;top:20px;right:20px;z-index:10;pointer-events:auto;width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,0.15);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,0.2);color:#fff;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .25s}
@@ -173,11 +174,12 @@ html,body{height:100%;font-family:'Noto Sans SC',sans-serif;background:var(--bg)
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
 @keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
 @keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
-@keyframes bounce{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
-@keyframes popIn{0%{opacity:0;transform:scale(0.3)}70%{opacity:1;transform:scale(1.1)}100%{opacity:1;transform:scale(1)}}
+@keyframes popIn{0%{opacity:0;transform:scale(0.3)}70%{opacity:1;transform:scale(1.08)}100%{opacity:1;transform:scale(1)}}
 @keyframes slideInUp{from{opacity:0;transform:translateY(40px)}to{opacity:1;transform:translateY(0)}}
-@keyframes textGlow{0%,100%{text-shadow:0 6px 30px rgba(0,0,0,0.4),0 0 60px rgba(255,255,255,0.15)}50%{text-shadow:0 6px 30px rgba(0,0,0,0.4),0 0 80px rgba(255,255,255,0.3)}}
+@keyframes textGlow{0%,100%{text-shadow:0 0 30px rgba(255,255,255,0.4),0 4px 20px rgba(0,0,0,0.15)}50%{text-shadow:0 0 60px rgba(255,255,255,0.6),0 4px 20px rgba(0,0,0,0.15)}}
 @keyframes floatUp{0%{opacity:0;transform:translateY(30px) scale(0.9)}100%{opacity:1;transform:translateY(0) scale(1)}}
+@keyframes heartBeat{0%,100%{transform:scale(1)}25%{transform:scale(1.15)}50%{transform:scale(1)}75%{transform:scale(1.08)}}
+@keyframes shimmer{0%{background-position:-200% 0}100%{background-position:200% 0}}
 
 @media(min-width:600px){.app{padding:40px 20px 60px}.card{padding:36px 32px}}
 @media(max-width:360px){.header h1{font-size:22px}.card{padding:20px 16px}.theme-dot{width:32px;height:32px}}
@@ -257,30 +259,32 @@ html,body{height:100%;font-family:'Noto Sans SC',sans-serif;background:var(--bg)
 <!-- ===== DISPLAY MODE ===== -->
 <div id="displayMode">
   <canvas id="displayCanvas"></canvas>
-  <!-- Page 1: Opening splash -->
-  <div class="display-page1" id="page1">
-    <div class="splash-emoji" id="sEmoji">🎂</div>
-    <div class="splash-title" id="sTitle">生日快乐</div>
-    <div class="splash-sub" id="sSub">HAPPY BIRTHDAY</div>
-    <div class="splash-name" id="sName"></div>
-    <div class="splash-tap" id="sTap">✨ 点击屏幕继续 ✨</div>
+  <!-- Phase 1: Hi [name] -->
+  <div class="d-phase d-phase1" id="phase1">
+    <div class="hi-text" id="hiText">Hi</div>
+    <div class="hi-name" id="hiName"></div>
   </div>
-  <!-- Page 2: Blessing content -->
-  <div class="display-page2" id="page2">
-    <div class="d-cake" id="dCake">🎂</div>
-    <div class="d-greeting" id="dGreeting">生日快乐！</div>
-    <div class="d-name" id="dName"></div>
-    <div class="d-date" id="dDate"></div>
-    <div class="d-divider" id="dDivider"></div>
-    <div class="d-blessing" id="dBlessing"></div>
-    <div class="d-sender" id="dSender"></div>
-    <div class="d-tap-next" id="dTapNext" style="position:absolute;bottom:50px;font-size:14px;color:rgba(255,255,255,0.5);opacity:0;pointer-events:auto;cursor:pointer">✨ 点击继续 ✨</div>
+  <!-- Phase 2: 生日快乐 -->
+  <div class="d-phase d-phase2" id="phase2">
+    <div class="bd-text" id="bdText">生日快乐</div>
   </div>
-  <!-- Page 3: Blessing overflow (only shown if text is long) -->
-  <div class="display-page3" id="page3">
-    <div class="p3-heart" id="p3Heart">💖</div>
+  <!-- Phase 3: Blessing content -->
+  <div class="d-phase d-phase3" id="phase3">
+    <div class="p3-cake" id="p3Cake">🎂</div>
+    <div class="p3-greeting" id="p3Greeting">生日快乐！</div>
+    <div class="p3-name" id="p3Name"></div>
+    <div class="p3-date" id="p3Date"></div>
+    <div class="p3-divider" id="p3Divider"></div>
     <div class="p3-blessing" id="p3Blessing"></div>
     <div class="p3-sender" id="p3Sender"></div>
+  </div>
+  <!-- Phase 4: Cake illustration -->
+  <div class="d-phase d-phase4" id="phase4">
+    <div class="cake-wrap" id="cakeWrap">
+      <canvas class="cake-canvas" id="cakeCanvas"></canvas>
+    </div>
+    <div class="cake-text" id="cakeText">Happy Birthday!</div>
+    <button class="cake-like" id="cakeLike">🤍 喜欢</button>
   </div>
   <button class="display-replay" id="displayReplay">🔄 再看一次</button>
   <button class="display-music" id="displayMusic" title="音乐">🎵</button>
@@ -492,7 +496,6 @@ function generateQRCode(url){
   const c=document.createElement('canvas');c.width=sz*cl;c.height=sz*cl;const ctx=c.getContext('2d');
   ctx.fillStyle='#fff';ctx.fillRect(0,0,c.width,c.height);
   for(let r=0;r<sz;r++)for(let co=0;co<sz;co++)if(qr.isDark(r,co)){ctx.fillStyle=THEMES[currentTheme].cg[1];ctx.fillRect(co*cl,r*cl,cl,cl)}
-  // Convert canvas to img so mobile long-press can save
   const img=document.createElement('img');
   img.src=c.toDataURL('image/png');
   img.style.width='200px';img.style.height='200px';img.style.borderRadius='8px';
@@ -555,212 +558,316 @@ function startDisplayMode(){
   document.querySelector('.bg-decor').style.display='none';
   $('displayMode').classList.add('show');
 
-  // Split blessing into pages (about 30 chars per page at the larger font)
-  const blessingText=displayData.blessing;
-  const MAX_CHARS_PER_PAGE=30; // ~2 lines of text on screen
-  let blessingPage1='',blessingPage2='';
-  if(blessingText.length>MAX_CHARS_PER_PAGE){
-    // Find a good break point
-    let breakIdx=MAX_CHARS_PER_PAGE;
-    for(let i=MAX_CHARS_PER_PAGE;i<Math.min(MAX_CHARS_PER_PAGE+10,blessingText.length);i++){
-      if(blessingText[i]==='，'||blessingText[i]==='。'||blessingText[i]==='！'||blessingText[i]==='？'||blessingText[i]==='、'||blessingText[i]===' '){breakIdx=i+1;break}
-    }
-    blessingPage1=blessingText.substring(0,breakIdx);
-    blessingPage2=blessingText.substring(breakIdx);
-  }else{
-    blessingPage1=blessingText;blessingPage2='';
-  }
-  const hasPage3=blessingPage2.length>0;
-
-  // Set page1 text
-  $('sName').textContent=`致：${displayData.name}`;
-  // Set page2 text
-  $('dName').textContent=`致：${displayData.name}`;
-  $('dDate').textContent=`${displayData.month}月${displayData.day}日`;
-  $('dBlessing').textContent=blessingPage1;
-  $('dSender').textContent=hasPage3?'':`—— 来自 ${displayData.sender} 的祝福`;
-  // Set page3 text
-  $('p3Blessing').textContent=blessingPage2;
+  // Set text content
+  $('hiName').textContent=displayData.name;
+  $('p3Name').textContent=`致：${displayData.name}`;
+  $('p3Date').textContent=`${displayData.month}月${displayData.day}日`;
+  $('p3Blessing').textContent=displayData.blessing;
   $('p3Sender').textContent=`—— 来自 ${displayData.sender} 的祝福`;
 
-  // Reset pages
-  $('page1').style.display='';$('page1').classList.remove('fade-out');
-  $('page2').classList.remove('show');
-  $('page3').classList.remove('show');
+  // Reset all phases
+  ['phase1','phase2','phase3','phase4'].forEach(id=>{
+    $(id).classList.remove('active');
+    $(id).querySelectorAll('[style*="animation"]').forEach(el=>{el.style.animation='';el.style.opacity='0'});
+  });
+  // Reset individual elements
+  ['hiText','hiName'].forEach(id=>{$(id).style.animation='';$(id).style.opacity='0'});
+  ['bdText'].forEach(id=>{$(id).style.animation='';$(id).style.opacity='0'});
+  ['p3Cake','p3Greeting','p3Name','p3Date','p3Divider','p3Blessing','p3Sender'].forEach(id=>{$(id).style.animation='';$(id).style.opacity='0'});
+  ['cakeWrap','cakeText','cakeLike'].forEach(id=>{$(id).style.animation='';$(id).style.opacity='0'});
+
   $('displayReplay').classList.remove('show');$('displayReplay').style.display='none';
 
-  // Reset all animated elements
-  ['sEmoji','sTitle','sSub','sName','sTap'].forEach(id=>{$(id).style.animation='none';$(id).style.opacity='0'});
-  ['dCake','dGreeting','dName','dDate','dDivider','dBlessing','dSender','dTapNext'].forEach(id=>{$(id).style.animation='none';$(id).style.opacity='0'});
-  ['p3Heart','p3Blessing','p3Sender'].forEach(id=>{$(id).style.animation='none';$(id).style.opacity='0'});
-
-  // Start canvas
+  // Canvas
   const canvas=$('displayCanvas'),ctx=canvas.getContext('2d');
   const dpr=Math.min(window.devicePixelRatio||1,2);
   let W,H;
   function resize(){W=window.innerWidth;H=window.innerHeight;canvas.width=W*dpr;canvas.height=H*dpr;canvas.style.width=W+'px';canvas.style.height=H+'px';ctx.setTransform(dpr,0,0,dpr,0,0)}
   resize();window.addEventListener('resize',resize);
 
-  const particles=[];const MAX_P=135;
-  class P{
-    constructor(type){this.type=type;this.init()}
-    init(){
-      this.life=1;this.rotation=Math.random()*360;this.rotSpeed=(Math.random()-0.5)*4;
-      this.opacity=Math.random()*0.5+0.5;
-      if(this.type==='star'){this.x=Math.random()*W;this.y=Math.random()*H;this.size=Math.random()*3+1;this.vx=0;this.vy=0;this.twinkle=Math.random()*Math.PI*2;this.twinkleSpd=Math.random()*0.05+0.02}
-      else if(this.type==='confetti'){this.x=Math.random()*W;this.y=-20-Math.random()*H*0.3;this.vx=(Math.random()-0.5)*1.5;this.vy=Math.random()*1.5+0.5;this.size=Math.random()*8+4;this.color=['#ff6b6b','#ffd93d','#6bcb77','#4d96ff','#ff9ff3','#fff'][Math.floor(Math.random()*6)];this.shape=Math.random()>0.5?'rect':'circle'}
-      else if(this.type==='heart'){this.x=Math.random()*W;this.y=-20;this.vx=(Math.random()-0.5)*0.5;this.vy=Math.random()*0.8+0.3;this.size=Math.random()*12+6;this.color=t.cg[1]}
-      else if(this.type==='balloon'){this.color=[t.cg[0],t.cg[1],t.cg[2],'#ff6b6b','#ffd93d','#6bcb77'][Math.floor(Math.random()*6)];this.vy=-(Math.random()*0.6+0.3);this.vx=(Math.random()-0.5)*0.3;this.size=Math.random()*20+15;this.x=Math.random()*W;this.y=H+20+Math.random()*100}
-      else if(this.type==='firework'){this.color=t.cg[Math.floor(Math.random()*3)];this.life=1;this.decay=Math.random()*0.02+0.01;this.size=Math.random()*3+1;this.gravity=0.03;this.vx=0;this.vy=0}
-      else if(this.type==='spark'){this.life=1;this.decay=Math.random()*0.03+0.015;this.size=Math.random()*4+1;this.gravity=0.05;this.color='#fff'}
+  // Particles - confetti sparkles
+  const sparkles=[];
+  const MAX_SPARKLES=80;
+
+  class Sparkle{
+    constructor(){this.reset()}
+    reset(){
+      this.x=Math.random()*W;
+      this.y=Math.random()*H;
+      this.size=Math.random()*4+1;
+      this.opacity=Math.random()*0.6+0.2;
+      this.twinkle=Math.random()*Math.PI*2;
+      this.twinkleSpeed=Math.random()*0.06+0.02;
+      this.color=['#fff','#ffe4ec','#ffd1dc','#fff0f5','#fffacd','#ffe4e1'][Math.floor(Math.random()*6)];
+      this.vy=Math.random()*0.3+0.1;
+      this.vx=(Math.random()-0.5)*0.3;
+      this.type=Math.random()>0.6?'dot':'star';
     }
     update(){
-      this.x+=this.vx;this.y+=this.vy;this.rotation+=this.rotSpeed;
-      if(this.type==='balloon'){this.x+=Math.sin(Date.now()*0.002+this.x)*0.2;return this.y>-40}
-      if(this.type==='firework'||this.type==='spark'){this.vy+=this.gravity;this.life-=this.decay;return this.life>0}
-      if(this.type==='star'){this.twinkle+=this.twinkleSpd;return true}
-      return this.y<H+20&&this.x>-20&&this.x<W+20;
+      this.y+=this.vy;this.x+=this.vx;
+      this.twinkle+=this.twinkleSpeed;
+      this.opacity=0.2+Math.sin(this.twinkle)*0.4;
+      if(this.y>H+10||this.x<-10||this.x>W+10){this.reset();this.y=-10}
     }
     draw(ctx){
-      ctx.save();ctx.globalAlpha=this.opacity*Math.max(0,this.life);
-      ctx.translate(this.x,this.y);ctx.rotate(this.rotation*Math.PI/180);
-      if(this.type==='confetti'){ctx.fillStyle=this.color;if(this.shape==='rect')ctx.fillRect(-this.size/2,-this.size/4,this.size,this.size/2);else{ctx.beginPath();ctx.arc(0,0,this.size/2,0,Math.PI*2);ctx.fill()}}
-      else if(this.type==='heart')drawHeart(ctx,0,0,this.size,this.color);
-      else if(this.type==='balloon')drawBalloon(ctx,0,0,this.size,this.color);
-      else if(this.type==='firework'||this.type==='spark'){ctx.fillStyle=this.color;ctx.beginPath();ctx.arc(0,0,this.size*Math.max(0.1,this.life),0,Math.PI*2);ctx.fill()}
-      else if(this.type==='star'){ctx.globalAlpha=0.5+Math.sin(this.twinkle)*0.3;ctx.fillStyle='#fff';drawStar(ctx,0,0,this.size)}
+      ctx.save();
+      ctx.globalAlpha=Math.max(0,this.opacity);
+      ctx.fillStyle=this.color;
+      if(this.type==='star'){
+        drawStar(ctx,this.x,this.y,this.size);
+      }else{
+        ctx.beginPath();ctx.arc(this.x,this.y,this.size*0.6,0,Math.PI*2);ctx.fill();
+      }
       ctx.restore();
     }
   }
 
-  function drawHeart(ctx,x,y,s,c){ctx.fillStyle=c;ctx.beginPath();const h=s/2;ctx.moveTo(x,y+h*0.3);ctx.bezierCurveTo(x,y-h*0.3,x-h,y-h*0.3,x-h,y+h*0.1);ctx.bezierCurveTo(x-h,y+h*0.6,x,y+h,x,y+h);ctx.bezierCurveTo(x,y+h,x+h,y+h*0.6,x+h,y+h*0.1);ctx.bezierCurveTo(x+h,y-h*0.3,x,y-h*0.3,x,y+h*0.3);ctx.fill()}
-  function drawBalloon(ctx,x,y,s,c){ctx.fillStyle=c;ctx.beginPath();ctx.ellipse(x,y-s*0.4,s*0.4,s*0.5,0,0,Math.PI*2);ctx.fill();ctx.fillStyle='rgba(255,255,255,0.3)';ctx.beginPath();ctx.ellipse(x-s*0.12,y-s*0.6,s*0.1,s*0.15,-0.3,0,Math.PI*2);ctx.fill();ctx.strokeStyle='rgba(255,255,255,0.4)';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(x,y+s*0.1);ctx.quadraticCurveTo(x+3,y+s*0.3,x,y+s*0.5);ctx.stroke()}
-
-  // Init stars
-  for(let i=0;i<50;i++){const p=new P('star');particles.push(p)}
-
-  let frame=0,fwTimer=0,currentPhase='splash';
-  let rocketPhase=0,rocketX=0,rocketY=0;
-
-  function spawnBurst(cx,cy,count){
-    for(let i=0;i<count&&particles.length<MAX_P+count;i++){
-      const p=new P('firework');p.x=cx;p.y=cy;
-      const a=Math.random()*Math.PI*2,sp=Math.random()*3+1;
-      p.vx=Math.cos(a)*sp;p.vy=Math.sin(a)*sp;particles.push(p);
+  // Burst particles for transitions
+  const bursts=[];
+  class Burst{
+    constructor(x,y,color){
+      this.x=x;this.y=y;this.color=color||'#fff';
+      this.vx=(Math.random()-0.5)*6;this.vy=(Math.random()-0.5)*6-2;
+      this.size=Math.random()*3+1;this.life=1;this.decay=Math.random()*0.02+0.01;this.gravity=0.05;
+    }
+    update(){this.x+=this.vx;this.y+=this.vy;this.vy+=this.gravity;this.life-=this.decay;return this.life>0}
+    draw(ctx){
+      ctx.save();ctx.globalAlpha=Math.max(0,this.life);ctx.fillStyle=this.color;
+      ctx.beginPath();ctx.arc(this.x,this.y,this.size*this.life,0,Math.PI*2);ctx.fill();ctx.restore();
     }
   }
-  function spawnRocket(){
-    rocketPhase=1;rocketX=W*0.15+Math.random()*W*0.7;rocketY=H;
+
+  function spawnBurst(cx,cy,count){
+    const colors=['#fff','#ffe4ec',t.cg[0],t.cg[1],'#ffd700','#ff69b4'];
+    for(let i=0;i<count;i++) bursts.push(new Burst(cx,cy,colors[Math.floor(Math.random()*colors.length)]));
   }
 
-  function animate(){
-    frame++;ctx.clearRect(0,0,W,H);
+  // Init sparkles
+  for(let i=0;i<MAX_SPARKLES;i++) sparkles.push(new Sparkle());
 
-    // BG
+  // Draw cartoon cake on the cake canvas (Phase 4)
+  function drawCakeIllustration(){
+    const cc=$('cakeCanvas');
+    const size=Math.min(W*0.75,350);
+    cc.width=size*2;cc.height=size*1.6*2;
+    cc.style.width=size+'px';cc.style.height=(size*1.6)+'px';
+    const cctx=cc.getContext('2d');
+    cctx.scale(2,2);
+    const cx=size/2,cy=size*1.1;
+
+    // Plate shadow
+    cctx.beginPath();cctx.ellipse(cx,cy+85,size*0.45,14,0,0,Math.PI*2);
+    cctx.fillStyle='rgba(0,0,0,0.08)';cctx.fill();
+
+    // Plate
+    cctx.beginPath();cctx.ellipse(cx,cy+75,size*0.42,12,0,0,Math.PI*2);
+    cctx.fillStyle='#f5f5f5';cctx.fill();
+    cctx.strokeStyle='#e0e0e0';cctx.lineWidth=1;cctx.stroke();
+
+    // Bottom layer (brown)
+    const bw=size*0.55,bh=55;
+    const g1=cctx.createLinearGradient(cx-bw/2,cy-bh,cx+bw/2,cy);
+    g1.addColorStop(0,'#d2691e');g1.addColorStop(1,'#8b4513');
+    cctx.fillStyle=g1;
+    roundRect(cctx,cx-bw/2,cy-bh,bw,bh,8);cctx.fill();
+
+    // Dripping icing on bottom
+    cctx.fillStyle='#fff8f0';
+    for(let i=-bw/2+10;i<bw/2-10;i+=22){
+      const dripH=8+Math.random()*14;
+      cctx.beginPath();
+      cctx.arc(cx+i,cy-bh+2,8,0,Math.PI);
+      cctx.rect(cx+i-8,cy-bh-dripH+2,16,dripH);
+      cctx.fill();
+    }
+
+    // Middle layer
+    const mw=size*0.44,mh=45;
+    const g2=cctx.createLinearGradient(cx-mw/2,cy-bh-mh,cx+mw/2,cy-bh);
+    g2.addColorStop(0,'#cd853f');g2.addColorStop(1,'#a0522d');
+    cctx.fillStyle=g2;
+    roundRect(cctx,cx-mw/2,cy-bh-mh,mw,mh,8);cctx.fill();
+
+    // Dripping icing on middle
+    cctx.fillStyle='#fff';
+    for(let i=-mw/2+8;i<mw/2-8;i+=18){
+      const dripH=6+Math.random()*10;
+      cctx.beginPath();
+      cctx.arc(cx+i,cy-bh-mh+2,6,0,Math.PI);
+      cctx.rect(cx+i-6,cy-bh-mh-dripH+2,12,dripH);
+      cctx.fill();
+    }
+
+    // Top layer
+    const tw=size*0.34,th=38;
+    const g3=cctx.createLinearGradient(cx-tw/2,cy-bh-mh-th,cx+tw/2,cy-bh-mh);
+    g3.addColorStop(0,'#deb887');g3.addColorStop(1,'#d2b48c');
+    cctx.fillStyle=g3;
+    roundRect(cctx,cx-tw/2,cy-bh-mh-th,tw,th,8);cctx.fill();
+
+    // White icing top
+    cctx.fillStyle='rgba(255,255,255,0.7)';
+    roundRect(cctx,cx-tw/2,cy-bh-mh-th,tw,10,8);cctx.fill();
+
+    // Decorative dots
+    cctx.fillStyle=t.cg[1];
+    for(let i=-tw/2+12;i<tw/2-6;i+=14){
+      cctx.beginPath();cctx.arc(cx+i,cy-bh-mh-th+22,3,0,Math.PI*2);cctx.fill();
+    }
+
+    // Candles
+    const candlePositions=[cx-20,cx,cx+20];
+    candlePositions.forEach((x,i)=>{
+      // Candle stick
+      cctx.fillStyle=i===1?'#fff':'#ffe4e1';
+      roundRect(cctx,x-3,cy-bh-mh-th-40,6,40,2);cctx.fill();
+      // Candle stripe
+      cctx.fillStyle=i===1?'#ff69b4':'#ffb6c1';
+      cctx.fillRect(x-3,cy-bh-mh-th-30,6,2);
+      cctx.fillRect(x-3,cy-bh-mh-th-20,6,2);
+      // Flame
+      const fy=cy-bh-mh-th-48;
+      cctx.beginPath();cctx.moveTo(x,fy);
+      cctx.quadraticCurveTo(x+8,fy-14,x,fy-22);
+      cctx.quadraticCurveTo(x-8,fy-14,x,fy);
+      cctx.fillStyle=i===1?'#ffd700':'#ffb347';cctx.fill();
+      // Flame glow
+      const gl=cctx.createRadialGradient(x,fy-10,0,x,fy-10,20);
+      gl.addColorStop(0,'rgba(255,200,50,0.35)');gl.addColorStop(1,'rgba(255,200,50,0)');
+      cctx.fillStyle=gl;cctx.fillRect(x-20,fy-30,40,40);
+    });
+  }
+
+  // Phase management
+  let currentPhase=0; // 0=none, 1=hi, 2=birthday, 3=blessing, 4=cake
+  let phaseStartTime=0;
+  const phaseTimings=[0, 3000, 3500, 0]; // auto-advance durations (0 = manual tap)
+
+  function showPhase(phaseNum){
+    currentPhase=phaseNum;
+    phaseStartTime=Date.now();
+    // Hide all phases
+    ['phase1','phase2','phase3','phase4'].forEach(id=>{$(id).classList.remove('active')});
+
+    if(phaseNum===1){
+      $('phase1').classList.add('active');
+      setTimeout(()=>{$('hiText').style.animation='popIn 0.8s ease forwards'},200);
+      setTimeout(()=>{$('hiName').style.animation='popIn 0.8s 0.4s ease forwards'},400);
+      spawnBurst(W/2,H*0.3,50);
+    }
+    else if(phaseNum===2){
+      $('phase2').classList.add('active');
+      setTimeout(()=>{$('bdText').style.animation='popIn 0.9s ease forwards';$('bdText').style.animation='popIn 0.9s ease forwards, textGlow 3s 1s ease-in-out infinite'},100);
+      spawnBurst(W/2,H*0.35,60);
+      setTimeout(()=>spawnBurst(W*0.25,H*0.25,35),400);
+      setTimeout(()=>spawnBurst(W*0.75,H*0.25,35),600);
+    }
+    else if(phaseNum===3){
+      $('phase3').classList.add('active');
+      setTimeout(()=>{$('p3Cake').style.animation='popIn 0.6s ease forwards'},100);
+      setTimeout(()=>{$('p3Greeting').style.animation='slideInUp 0.6s ease forwards'},300);
+      setTimeout(()=>{$('p3Name').style.animation='slideInUp 0.6s 0.15s ease forwards'},450);
+      setTimeout(()=>{$('p3Date').style.animation='slideInUp 0.6s 0.3s ease forwards'},600);
+      setTimeout(()=>{$('p3Divider').style.animation='fadeIn 0.5s 0.5s ease forwards'},700);
+      setTimeout(()=>{$('p3Blessing').style.animation='slideInUp 0.6s 0.6s ease forwards'},800);
+      setTimeout(()=>{$('p3Sender').style.animation='slideInUp 0.6s 0.9s ease forwards'},1000);
+      spawnBurst(W/2,H*0.2,45);
+    }
+    else if(phaseNum===4){
+      drawCakeIllustration();
+      $('phase4').classList.add('active');
+      setTimeout(()=>{$('cakeWrap').style.animation='popIn 0.8s ease forwards'},200);
+      setTimeout(()=>{$('cakeText').style.animation='slideInUp 0.6s 0.5s ease forwards'},500);
+      setTimeout(()=>{$('cakeLike').style.animation='fadeIn 0.5s 1s ease forwards'},1000);
+      setTimeout(()=>{$('displayReplay').style.display='block';setTimeout(()=>$('displayReplay').classList.add('show'),100)},1500);
+      spawnBurst(W/2,H*0.3,55);
+    }
+  }
+
+  // Auto-advance timer
+  let autoAdvanceTimer=null;
+  function scheduleAutoAdvance(phaseNum){
+    clearTimeout(autoAdvanceTimer);
+    if(phaseTimings[phaseNum-1]>0){
+      autoAdvanceTimer=setTimeout(()=>{
+        if(currentPhase===phaseNum) showPhase(phaseNum+1);
+      },phaseTimings[phaseNum-1]);
+    }
+  }
+
+  // Start with Phase 1
+  showPhase(1);
+  scheduleAutoAdvance(1);
+  // After phase 1 -> phase 2
+  setTimeout(()=>scheduleAutoAdvance(2),100);
+  // After phase 2 -> phase 3
+  setTimeout(()=>scheduleAutoAdvance(3),200);
+
+  // Like button
+  $('cakeLike').onclick=function(e){
+    e.stopPropagation();
+    if(!this.classList.contains('liked')){
+      this.classList.add('liked');this.textContent='❤️ 已喜欢';
+      spawnBurst(W/2,H*0.5,30);
+    }else{
+      this.classList.remove('liked');this.textContent='🤍 喜欢';
+    }
+  };
+
+  // Tap to advance (for phases without auto-advance)
+  $('displayMode').addEventListener('click',e=>{
+    if(e.target.id==='displayReplay'||e.target.id==='displayMusic'||e.target.id==='cakeLike')return;
+    if(currentPhase===3){
+      showPhase(4);
+    }else if(currentPhase===4){
+      // Already at last phase, do nothing
+    }
+  });
+
+  // Animation loop
+  let frame=0;
+  function animate(){
+    frame++;
+    ctx.clearRect(0,0,W,H);
+
+    // Background gradient - soft pink always
     const bg=ctx.createLinearGradient(0,0,W*0.3,H);
     bg.addColorStop(0,t.cg[2]+'ee');bg.addColorStop(0.5,t.cg[1]+'dd');bg.addColorStop(1,t.cg[0]+'cc');
     ctx.fillStyle=bg;ctx.fillRect(0,0,W,H);
 
-    // Phase: splash (page1)
-    if(currentPhase==='splash'){
-      if(frame===1){
-        // Animate page1 elements
-        setTimeout(()=>{$('sEmoji').style.animation='popIn 0.8s ease forwards'},200);
-        setTimeout(()=>{$('sTitle').style.animation='popIn 0.8s 0.3s ease forwards'},300);
-        setTimeout(()=>{$('sTitle').style.animation='popIn 0.8s 0.3s ease forwards, textGlow 3s 1.2s ease-in-out infinite'},1100);
-        setTimeout(()=>{$('sSub').style.animation='floatUp 0.6s 0.6s ease forwards'},600);
-        setTimeout(()=>{$('sName').style.animation='floatUp 0.6s 0.9s ease forwards'},900);
-        setTimeout(()=>{$('sTap').style.animation='fadeIn 0.5s 1.8s ease forwards'},1800);
-        // First big firework burst
-        setTimeout(()=>spawnBurst(W/2,H*0.25,60),400);
-        setTimeout(()=>spawnBurst(W*0.25,H*0.3,40),700);
-        setTimeout(()=>spawnBurst(W*0.75,H*0.3,40),900);
-      }
-      // Continuous fireworks during splash
-      if(frame>60&&frame%80===0)spawnBurst(W*0.2+Math.random()*W*0.6,H*0.15+Math.random()*H*0.25,35);
+    // Subtle radial glow in center
+    const glow=ctx.createRadialGradient(W/2,H*0.4,0,W/2,H*0.4,W*0.6);
+    glow.addColorStop(0,'rgba(255,255,255,0.08)');glow.addColorStop(1,'rgba(255,255,255,0)');
+    ctx.fillStyle=glow;ctx.fillRect(0,0,W,H);
+
+    // Update & draw sparkles
+    for(const s of sparkles){s.update();s.draw(ctx)}
+
+    // Update & draw bursts
+    for(let i=bursts.length-1;i>=0;i--){
+      if(!bursts[i].update()) bursts.splice(i,1);
+      else bursts[i].draw(ctx);
     }
 
-    // Phase: blessing (page2)
-    if(currentPhase==='blessing'){
-      fwTimer++;
-      if(fwTimer%50===0)spawnBurst(W*0.2+Math.random()*W*0.6,H*0.15+Math.random()*H*0.3,35);
-      if(frame%4===0&&particles.length<MAX_P+55)particles.push(new P('confetti'));
-      if(frame%9===0&&particles.length<MAX_P+55)particles.push(new P('heart'));
-      if(frame%22===0&&particles.length<MAX_P+55)particles.push(new P('balloon'));
-    }
-
-    // Rocket animation
-    if(rocketPhase===1){
-      rocketY-=6;
-      // Draw rocket trail
-      ctx.fillStyle='rgba(255,255,255,0.6)';ctx.beginPath();ctx.arc(rocketX,rocketY,2,0,Math.PI*2);ctx.fill();
-      if(rocketY<H*0.2+Math.random()*H*0.15){spawnBurst(rocketX,rocketY,45);rocketPhase=0}
-    }
-
-    // Particles
-    for(let i=particles.length-1;i>=0;i--){
-      if(!particles[i].update()){if(particles[i].type==='star'){particles[i].x=Math.random()*W;particles[i].y=Math.random()*H}else particles.splice(i,1)}
-      else particles[i].draw(ctx);
+    // Extra effects per phase
+    if(currentPhase===2 && frame%3===0 && sparkles.length<MAX_SPARKLES+20){
+      // Extra sparkles during 生日快乐
+      const s=new Sparkle();
+      s.x=W*0.2+Math.random()*W*0.6;
+      s.y=H*0.3+Math.random()*H*0.3;
+      s.size=Math.random()*3+2;
+      sparkles.push(s);
     }
 
     displayAnim=requestAnimationFrame(animate);
   }
 
-  // Click to go from splash to blessing
-  function goToBlessing(){
-    if(currentPhase!=='splash')return;
-    currentPhase='blessing';fwTimer=0;
-    $('page1').classList.add('fade-out');
-    setTimeout(()=>{$('page1').style.display='none';$('page2').classList.add('show');
-      // Animate page2 elements
-      setTimeout(()=>{$('dCake').style.animation='popIn 0.6s ease forwards'},100);
-      setTimeout(()=>{$('dGreeting').style.animation='slideInUp 0.6s ease forwards'},300);
-      setTimeout(()=>{$('dName').style.animation='slideInUp 0.6s 0.15s ease forwards'},450);
-      setTimeout(()=>{$('dDate').style.animation='slideInUp 0.6s 0.3s ease forwards'},600);
-      setTimeout(()=>{$('dDivider').style.animation='fadeIn 0.5s 0.5s ease forwards'},700);
-      setTimeout(()=>{$('dBlessing').style.animation='slideInUp 0.6s 0.6s ease forwards'},800);
-      if(!hasPage3){
-        setTimeout(()=>{$('dSender').style.animation='slideInUp 0.6s 0.9s ease forwards'},1000);
-        setTimeout(()=>{$('displayReplay').style.display='block';setTimeout(()=>$('displayReplay').classList.add('show'),100)},1500);
-      }else{
-        setTimeout(()=>{$('dTapNext').style.animation='fadeIn 0.5s 1.2s ease forwards'},1200);
-      }
-      // Burst
-      spawnBurst(W/2,H*0.2,50);
-    },800);
-  }
-
-  // Click to go from page2 to page3 (if blessing text is long)
-  function goToPage3(){
-    if(currentPhase!=='blessing'||!hasPage3)return;
-    currentPhase='page3';
-    $('page2').style.transition='opacity 0.8s ease';
-    $('page2').style.opacity='0';
-    setTimeout(()=>{
-      $('page2').classList.remove('show');$('page2').style.opacity='';$('page2').style.transition='';
-      $('page3').classList.add('show');
-      setTimeout(()=>{$('p3Heart').style.animation='popIn 0.6s ease forwards'},100);
-      setTimeout(()=>{$('p3Blessing').style.animation='slideInUp 0.6s 0.2s ease forwards'},300);
-      setTimeout(()=>{$('p3Sender').style.animation='slideInUp 0.6s 0.6s ease forwards'},700);
-      setTimeout(()=>{$('displayReplay').style.display='block';setTimeout(()=>$('displayReplay').classList.add('show'),100)},1200);
-      spawnBurst(W/2,H*0.2,45);
-    },800);
-  }
-
-  // Listen for clicks/taps on the display area
-  $('displayMode').addEventListener('click',e=>{
-    if(e.target.id==='displayReplay'||e.target.id==='displayMusic')return;
-    if(currentPhase==='splash')goToBlessing();
-    else if(currentPhase==='blessing'&&hasPage3)goToPage3();
-  });
-
-  // Auto-play music on first user interaction (browsers require user gesture)
+  // Auto-play music on first user interaction
   function tryAutoPlay(){
     startMusicLoop();
     document.removeEventListener('click',tryAutoPlay);
     document.removeEventListener('touchstart',tryAutoPlay);
   }
-  // Try immediately (won't work on most mobile, but will on desktop if no autoplay policy)
   if(!startMusicLoop()){
     document.addEventListener('click',tryAutoPlay,{once:true});
     document.addEventListener('touchstart',tryAutoPlay,{once:true});
@@ -797,7 +904,6 @@ function playOneCycle(){
     o.start(time);o.stop(time+DURS[i]);
     time+=DURS[i];
   });
-  // Schedule next cycle
   musicLoopTimer=setTimeout(()=>{
     if(musicPlaying)playOneCycle();
   },TOTAL_DUR*1000+200);
@@ -831,7 +937,6 @@ $('displayMusic').addEventListener('click',function(e){
 if(isDisplayMode){startDisplayMode()}
 else{
   initThemes();selectTheme(0);
-  // Default birthday to today
   const today=new Date();
   selectedMonth=today.getMonth()+1;selectedDay=today.getDate();
   pickerMonth=selectedMonth;pickerDay=selectedDay;
