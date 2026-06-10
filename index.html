@@ -91,7 +91,7 @@ html,body{height:100%;font-family:'Noto Sans SC',sans-serif;background:var(--bg)
 .picker-cancel,.picker-confirm{background:none;border:none;cursor:pointer;font-family:inherit;font-size:14px}
 .picker-cancel{color:#999}.picker-confirm{color:var(--theme-color);font-weight:600}
 .picker-body{display:flex;height:220px;position:relative;padding:0 10px}
-.picker-body::before{content:'';position:absolute;left:10px;right:10px;top:66px;height:44px;border-top:1px solid #e8e8e8;border-bottom:1px solid #e8e8e8;background:rgba(255,107,157,0.04);z-index:2;pointer-events:none;border-radius:8px}
+.picker-body::before{content:'';position:absolute;left:10px;right:10px;top:88px;height:44px;border-top:1px solid #e8e8e8;border-bottom:1px solid #e8e8e8;background:rgba(255,107,157,0.04);z-index:2;pointer-events:none;border-radius:8px}
 .picker-column{flex:1;height:100%;overflow-y:auto;scroll-snap-type:y mandatory;-webkit-overflow-scrolling:touch}
 .picker-column::-webkit-scrollbar{display:none}
 .picker-item{height:44px;display:flex;align-items:center;justify-content:center;font-size:16px;color:#999;scroll-snap-align:center;cursor:pointer;transition:all .15s;user-select:none}
@@ -392,11 +392,11 @@ function scrollPicker(col,val){
   col.querySelectorAll('.picker-item').forEach(it=>{it.style.color='';it.style.fontWeight=''});
   const items=[...col.querySelectorAll('.picker-item')];
   const t=items.find(it=>it.dataset.val==val);
-  if(t){col.scrollTop=t.offsetTop-44*1.5+22;t.style.color='var(--theme-color)';t.style.fontWeight='600'}
+  if(t){col.scrollTop=t.offsetTop-88;t.style.color='var(--theme-color)';t.style.fontWeight='600'}
 }
 function readPickerCol(col){
-  const items=[...col.querySelectorAll('.picker-item')];const center=col.scrollTop+col.clientHeight/2;
-  let best=items[0],min=Infinity;items.forEach(it=>{const d=Math.abs(it.offsetTop+22-center);if(d<min){min=d;best=it}});
+  const items=[...col.querySelectorAll('.picker-item')];const target=col.scrollTop+88;
+  let best=items[0],min=Infinity;items.forEach(it=>{const d=Math.abs(it.offsetTop-target);if(d<min){min=d;best=it}});
   return parseInt(best.dataset.val)||1;
 }
 let mT,dT;
@@ -829,7 +829,15 @@ $('displayMusic').addEventListener('click',function(e){
 
 /* ===== INIT ===== */
 if(isDisplayMode){startDisplayMode()}
-else{initThemes();selectTheme(0)}
+else{
+  initThemes();selectTheme(0);
+  // Default birthday to today
+  const today=new Date();
+  selectedMonth=today.getMonth()+1;selectedDay=today.getDate();
+  pickerMonth=selectedMonth;pickerDay=selectedDay;
+  birthdayDisplay.textContent=`${String(selectedMonth).padStart(2,'0')}月${String(selectedDay).padStart(2,'0')}日`;
+  birthdayDisplay.style.color='var(--text)';
+}
 
 })();
 </script>
