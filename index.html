@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>初心祝福 · 生日快乐 🎂</title>
+<title>Happy Everyday · 生日快乐 🎂</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.min.js"></script>
@@ -149,11 +149,19 @@ html,body{height:100%;font-family:'Noto Sans SC',sans-serif;background:var(--bg)
 .display-page2 .d-greeting{font-family:'ZCOOL KuaiLe',cursive;font-size:clamp(28px,8vw,48px);color:#fff;text-shadow:0 4px 20px rgba(0,0,0,0.3);opacity:0;margin-bottom:8px}
 .display-page2 .d-name{font-family:'ZCOOL KuaiLe',cursive;font-size:clamp(24px,6vw,40px);color:#fff;text-shadow:0 3px 15px rgba(0,0,0,0.3);opacity:0;margin-bottom:6px}
 .display-page2 .d-date{font-size:clamp(15px,3.5vw,22px);color:rgba(255,255,255,0.8);opacity:0;margin-bottom:30px}
-.display-page2 .d-blessing{font-size:clamp(15px,3.5vw,20px);color:rgba(255,255,255,0.95);line-height:1.8;max-width:500px;opacity:0;text-shadow:0 2px 10px rgba(0,0,0,0.2)}
+.display-page2 .d-blessing{font-size:clamp(18px,4.5vw,26px);color:rgba(255,255,255,0.95);line-height:1.8;max-width:500px;opacity:0;text-shadow:0 2px 10px rgba(0,0,0,0.2)}
 .display-page2 .d-sender{font-size:clamp(13px,3vw,17px);color:rgba(255,255,255,0.6);margin-top:30px;opacity:0}
 .display-page2 .d-divider{width:60px;height:2px;background:rgba(255,255,255,0.3);margin:20px auto;opacity:0;border-radius:1px}
 
 .display-replay{position:absolute;bottom:40px;left:50%;transform:translateX(-50%);z-index:10;pointer-events:auto;background:rgba(255,255,255,0.15);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,0.25);color:#fff;padding:10px 28px;border-radius:24px;font-size:14px;font-family:inherit;cursor:pointer;transition:all .25s;opacity:0;display:none}
+
+/* Page 3: Blessing overflow */
+.display-page3{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 24px;text-align:center;z-index:2;pointer-events:none;opacity:0;transition:opacity 1s ease}
+.display-page3.show{opacity:1}
+.display-page3 .p3-blessing{font-size:clamp(18px,4.5vw,26px);color:rgba(255,255,255,0.95);line-height:1.9;max-width:500px;opacity:0;text-shadow:0 2px 10px rgba(0,0,0,0.2)}
+.display-page3 .p3-sender{font-size:clamp(15px,3.5vw,20px);color:rgba(255,255,255,0.7);margin-top:40px;opacity:0}
+.display-page3 .p3-heart{font-size:clamp(40px,10vw,60px);opacity:0;margin-bottom:20px}
+.display-page3 .p3-tap{position:absolute;bottom:50px;font-size:14px;color:rgba(255,255,255,0.5);opacity:0;pointer-events:auto;cursor:pointer}
 .display-replay.show{opacity:1;display:block}
 .display-replay:hover{background:rgba(255,255,255,0.25)}
 .display-music{position:absolute;top:20px;right:20px;z-index:10;pointer-events:auto;width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,0.15);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,0.2);color:#fff;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .25s}
@@ -182,7 +190,7 @@ html,body{height:100%;font-family:'Noto Sans SC',sans-serif;background:var(--bg)
 <div class="app" id="editMode">
   <header class="header">
     <h1>🎂 生日快乐</h1>
-    <p>初心祝福 · 用心传递每一份温暖</p>
+    <p>Happy Everyday · 用心传递每一份温暖</p>
   </header>
 
   <div class="card">
@@ -240,9 +248,9 @@ html,body{height:100%;font-family:'Noto Sans SC',sans-serif;background:var(--bg)
   </div>
 
   <footer class="footer">
-    <div class="brand">初心祝福</div>
+    <div class="brand">Happy Everyday</div>
     <div class="desc">用心传递每一份温暖<br>让每一个特殊时刻都充满惊喜与感动</div>
-    <div class="footer-copy">Copyright © 2025 初心祝福</div>
+    <div class="footer-copy">Copyright © 2025 Happy Everyday</div>
   </footer>
 </div>
 
@@ -266,6 +274,13 @@ html,body{height:100%;font-family:'Noto Sans SC',sans-serif;background:var(--bg)
     <div class="d-divider" id="dDivider"></div>
     <div class="d-blessing" id="dBlessing"></div>
     <div class="d-sender" id="dSender"></div>
+    <div class="d-tap-next" id="dTapNext" style="position:absolute;bottom:50px;font-size:14px;color:rgba(255,255,255,0.5);opacity:0;pointer-events:auto;cursor:pointer">✨ 点击继续 ✨</div>
+  </div>
+  <!-- Page 3: Blessing overflow (only shown if text is long) -->
+  <div class="display-page3" id="page3">
+    <div class="p3-heart" id="p3Heart">💖</div>
+    <div class="p3-blessing" id="p3Blessing"></div>
+    <div class="p3-sender" id="p3Sender"></div>
   </div>
   <button class="display-replay" id="displayReplay">🔄 再看一次</button>
   <button class="display-music" id="displayMusic" title="音乐">🎵</button>
@@ -459,7 +474,7 @@ function generateCard(){
   ctx.font='18px "Noto Sans SC",sans-serif';ctx.fillStyle='rgba(255,255,255,0.65)';ctx.fillText(`—— 来自 ${sender} 的祝福`,W/2,830);
 
   const shareURL=buildShareURL();drawQRCodeOnCanvas(ctx,shareURL,W,H,t);
-  ctx.font='13px "Noto Sans SC",sans-serif';ctx.fillStyle='rgba(255,255,255,0.5)';ctx.fillText('初心祝福 · 扫码打开给Ta惊喜 🎉',W/2,H-40);
+  ctx.font='13px "Noto Sans SC",sans-serif';ctx.fillStyle='rgba(255,255,255,0.5)';ctx.fillText('Happy Everyday · 扫码打开给Ta惊喜 🎉',W/2,H-40);
 
   resultSection.classList.add('show');resultSection.scrollIntoView({behavior:'smooth',block:'start'});
   generateQRCode(shareURL);saveHistory(name,sender,selectedMonth,selectedDay,blessing,currentTheme);
@@ -535,22 +550,44 @@ function startDisplayMode(){
   document.querySelector('.bg-decor').style.display='none';
   $('displayMode').classList.add('show');
 
+  // Split blessing into pages (about 30 chars per page at the larger font)
+  const blessingText=displayData.blessing;
+  const MAX_CHARS_PER_PAGE=30; // ~2 lines of text on screen
+  let blessingPage1='',blessingPage2='';
+  if(blessingText.length>MAX_CHARS_PER_PAGE){
+    // Find a good break point
+    let breakIdx=MAX_CHARS_PER_PAGE;
+    for(let i=MAX_CHARS_PER_PAGE;i<Math.min(MAX_CHARS_PER_PAGE+10,blessingText.length);i++){
+      if(blessingText[i]==='，'||blessingText[i]==='。'||blessingText[i]==='！'||blessingText[i]==='？'||blessingText[i]==='、'||blessingText[i]===' '){breakIdx=i+1;break}
+    }
+    blessingPage1=blessingText.substring(0,breakIdx);
+    blessingPage2=blessingText.substring(breakIdx);
+  }else{
+    blessingPage1=blessingText;blessingPage2='';
+  }
+  const hasPage3=blessingPage2.length>0;
+
   // Set page1 text
   $('sName').textContent=`致：${displayData.name}`;
   // Set page2 text
   $('dName').textContent=`致：${displayData.name}`;
   $('dDate').textContent=`${displayData.month}月${displayData.day}日`;
-  $('dBlessing').textContent=displayData.blessing;
-  $('dSender').textContent=`—— 来自 ${displayData.sender} 的祝福`;
+  $('dBlessing').textContent=blessingPage1;
+  $('dSender').textContent=hasPage3?'':`—— 来自 ${displayData.sender} 的祝福`;
+  // Set page3 text
+  $('p3Blessing').textContent=blessingPage2;
+  $('p3Sender').textContent=`—— 来自 ${displayData.sender} 的祝福`;
 
   // Reset pages
   $('page1').style.display='';$('page1').classList.remove('fade-out');
   $('page2').classList.remove('show');
+  $('page3').classList.remove('show');
   $('displayReplay').classList.remove('show');$('displayReplay').style.display='none';
 
   // Reset all animated elements
   ['sEmoji','sTitle','sSub','sName','sTap'].forEach(id=>{$(id).style.animation='none';$(id).style.opacity='0'});
-  ['dCake','dGreeting','dName','dDate','dDivider','dBlessing','dSender'].forEach(id=>{$(id).style.animation='none';$(id).style.opacity='0'});
+  ['dCake','dGreeting','dName','dDate','dDivider','dBlessing','dSender','dTapNext'].forEach(id=>{$(id).style.animation='none';$(id).style.opacity='0'});
+  ['p3Heart','p3Blessing','p3Sender'].forEach(id=>{$(id).style.animation='none';$(id).style.opacity='0'});
 
   // Start canvas
   const canvas=$('displayCanvas'),ctx=canvas.getContext('2d');
@@ -559,7 +596,7 @@ function startDisplayMode(){
   function resize(){W=window.innerWidth;H=window.innerHeight;canvas.width=W*dpr;canvas.height=H*dpr;canvas.style.width=W+'px';canvas.style.height=H+'px';ctx.setTransform(dpr,0,0,dpr,0,0)}
   resize();window.addEventListener('resize',resize);
 
-  const particles=[];const MAX_P=150;
+  const particles=[];const MAX_P=135;
   class P{
     constructor(type){this.type=type;this.init()}
     init(){
@@ -642,9 +679,9 @@ function startDisplayMode(){
     if(currentPhase==='blessing'){
       fwTimer++;
       if(fwTimer%50===0)spawnBurst(W*0.2+Math.random()*W*0.6,H*0.15+Math.random()*H*0.3,35);
-      if(frame%3===0&&particles.length<MAX_P+60)particles.push(new P('confetti'));
-      if(frame%8===0&&particles.length<MAX_P+60)particles.push(new P('heart'));
-      if(frame%20===0&&particles.length<MAX_P+60)particles.push(new P('balloon'));
+      if(frame%4===0&&particles.length<MAX_P+55)particles.push(new P('confetti'));
+      if(frame%9===0&&particles.length<MAX_P+55)particles.push(new P('heart'));
+      if(frame%22===0&&particles.length<MAX_P+55)particles.push(new P('balloon'));
     }
 
     // Rocket animation
@@ -677,17 +714,39 @@ function startDisplayMode(){
       setTimeout(()=>{$('dDate').style.animation='slideInUp 0.6s 0.3s ease forwards'},600);
       setTimeout(()=>{$('dDivider').style.animation='fadeIn 0.5s 0.5s ease forwards'},700);
       setTimeout(()=>{$('dBlessing').style.animation='slideInUp 0.6s 0.6s ease forwards'},800);
-      setTimeout(()=>{$('dSender').style.animation='slideInUp 0.6s 0.9s ease forwards'},1000);
-      setTimeout(()=>{$('displayReplay').style.display='block';setTimeout(()=>$('displayReplay').classList.add('show'),100)},1500);
+      if(!hasPage3){
+        setTimeout(()=>{$('dSender').style.animation='slideInUp 0.6s 0.9s ease forwards'},1000);
+        setTimeout(()=>{$('displayReplay').style.display='block';setTimeout(()=>$('displayReplay').classList.add('show'),100)},1500);
+      }else{
+        setTimeout(()=>{$('dTapNext').style.animation='fadeIn 0.5s 1.2s ease forwards'},1200);
+      }
       // Burst
       spawnBurst(W/2,H*0.2,50);
+    },800);
+  }
+
+  // Click to go from page2 to page3 (if blessing text is long)
+  function goToPage3(){
+    if(currentPhase!=='blessing'||!hasPage3)return;
+    currentPhase='page3';
+    $('page2').style.transition='opacity 0.8s ease';
+    $('page2').style.opacity='0';
+    setTimeout(()=>{
+      $('page2').classList.remove('show');$('page2').style.opacity='';$('page2').style.transition='';
+      $('page3').classList.add('show');
+      setTimeout(()=>{$('p3Heart').style.animation='popIn 0.6s ease forwards'},100);
+      setTimeout(()=>{$('p3Blessing').style.animation='slideInUp 0.6s 0.2s ease forwards'},300);
+      setTimeout(()=>{$('p3Sender').style.animation='slideInUp 0.6s 0.6s ease forwards'},700);
+      setTimeout(()=>{$('displayReplay').style.display='block';setTimeout(()=>$('displayReplay').classList.add('show'),100)},1200);
+      spawnBurst(W/2,H*0.2,45);
     },800);
   }
 
   // Listen for clicks/taps on the display area
   $('displayMode').addEventListener('click',e=>{
     if(e.target.id==='displayReplay'||e.target.id==='displayMusic')return;
-    goToBlessing();
+    if(currentPhase==='splash')goToBlessing();
+    else if(currentPhase==='blessing'&&hasPage3)goToPage3();
   });
 
   // Auto-play music hint
