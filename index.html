@@ -749,8 +749,17 @@ function startDisplayMode(){
     else if(currentPhase==='blessing'&&hasPage3)goToPage3();
   });
 
-  // Auto-play music hint
-  setTimeout(()=>{try{audioCtx=new(window.AudioContext||window.webkitAudioContext)()}catch{}},500);
+  // Auto-play music on first user interaction (browsers require user gesture)
+  function tryAutoPlay(){
+    startMusicLoop();
+    document.removeEventListener('click',tryAutoPlay);
+    document.removeEventListener('touchstart',tryAutoPlay);
+  }
+  // Try immediately (won't work on most mobile, but will on desktop if no autoplay policy)
+  if(!startMusicLoop()){
+    document.addEventListener('click',tryAutoPlay,{once:true});
+    document.addEventListener('touchstart',tryAutoPlay,{once:true});
+  }
 
   animate();
 }
@@ -758,20 +767,59 @@ function startDisplayMode(){
 // Replay
 $('displayReplay').addEventListener('click',()=>{
   if(displayAnim)cancelAnimationFrame(displayAnim);
+  stopMusicLoop();
   startDisplayMode();
 });
 
-// Music
-$('displayMusic').addEventListener('click',function(){
-  if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)();
-  if(musicPlaying){try{audioCtx.close()}catch{}audioCtx=null;musicPlaying=false;this.classList.remove('playing');return}
-  musicPlaying=true;this.classList.add('playing');
-  audioCtx=new(window.AudioContext||window.webkitAudioContext)();
-  const notes=[262,262,294,262,349,330,262,262,294,262,392,349,262,262,523,440,349,330,294,466,466,440,349,392,349];
-  const durs=[0.3,0.15,0.45,0.45,0.45,0.9,0.3,0.15,0.45,0.45,0.45,0.9,0.3,0.15,0.45,0.45,0.45,0.45,0.9,0.3,0.15,0.45,0.45,0.45,0.9];
+// Music - loop version
+const NOTES=[262,262,294,262,349,330,262,262,294,262,392,349,262,262,523,440,349,330,294,466,466,440,349,392,349];
+const DURS=[0.3,0.15,0.45,0.45,0.45,0.9,0.3,0.15,0.45,0.45,0.45,0.9,0.3,0.15,0.45,0.45,0.45,0.45,0.9,0.3,0.15,0.45,0.45,0.45,0.9];
+let musicLoopTimer=null;
+
+function getTotalDuration(){let t=0;DURS.forEach(d=>t+=d);return t}
+const TOTAL_DUR=getTotalDuration();
+
+function playOneCycle(){
+  if(!musicPlaying||!audioCtx)return;
+  if(audioCtx.state==='suspended'){audioCtx.resume()}
   let time=audioCtx.currentTime+0.1;
-  notes.forEach((freq,i)=>{const o=audioCtx.createOscillator(),g=audioCtx.createGain();o.type='sine';o.frequency.value=freq;g.gain.setValueAtTime(0.15,time);g.gain.exponentialRampToValueAtTime(0.01,time+durs[i]*0.9);o.connect(g);g.connect(audioCtx.destination);o.start(time);o.stop(time+durs[i]);time+=durs[i]});
-  setTimeout(()=>{musicPlaying=false;$('displayMusic').classList.remove('playing')},time*1000);
+  NOTES.forEach((freq,i)=>{
+    const o=audioCtx.createOscillator(),g=audioCtx.createGain();
+    o.type='sine';o.frequency.value=freq;
+    g.gain.setValueAtTime(0.12,time);
+    g.gain.exponentialRampToValueAtTime(0.01,time+DURS[i]*0.9);
+    o.connect(g);g.connect(audioCtx.destination);
+    o.start(time);o.stop(time+DURS[i]);
+    time+=DURS[i];
+  });
+  // Schedule next cycle
+  musicLoopTimer=setTimeout(()=>{
+    if(musicPlaying)playOneCycle();
+  },TOTAL_DUR*1000+200);
+}
+
+function startMusicLoop(){
+  if(musicPlaying)return false;
+  try{
+    audioCtx=new(window.AudioContext||window.webkitAudioContext)();
+    musicPlaying=true;
+    $('displayMusic').classList.add('playing');
+    playOneCycle();
+    return true;
+  }catch{return false}
+}
+
+function stopMusicLoop(){
+  musicPlaying=false;
+  clearTimeout(musicLoopTimer);
+  if(audioCtx){try{audioCtx.close()}catch{};audioCtx=null}
+  $('displayMusic').classList.remove('playing');
+}
+
+$('displayMusic').addEventListener('click',function(e){
+  e.stopPropagation();
+  if(musicPlaying)stopMusicLoop();
+  else startMusicLoop();
 });
 
 /* ===== INIT ===== */
