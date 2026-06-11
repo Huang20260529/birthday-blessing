@@ -741,7 +741,7 @@ function startDisplayMode(){
   // Phase management
   let currentPhase=0; // 0=none, 1=hi, 2=birthday, 3=blessing, 4=cake
   let phaseStartTime=0;
-  const phaseTimings=[0, 3000, 3500, 0]; // auto-advance durations (0 = manual tap)
+  const phaseTimings=[3000, 3500, 0, 0]; // auto-advance per phase: phase1=3s, phase2=3.5s, phase3=tap, phase4=none
 
   function showPhase(phaseNum){
     currentPhase=phaseNum;
