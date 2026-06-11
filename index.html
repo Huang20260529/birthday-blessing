@@ -648,93 +648,88 @@ function startDisplayMode(){
   // Draw cartoon cake on the cake canvas (Phase 4)
   function drawCakeIllustration(){
     const cc=$('cakeCanvas');
-    const size=Math.min(W*0.75,350);
-    cc.width=size*2;cc.height=size*1.6*2;
-    cc.style.width=size+'px';cc.style.height=(size*1.6)+'px';
-    const cctx=cc.getContext('2d');
-    cctx.scale(2,2);
-    const cx=size/2,cy=size*1.1;
+    const cakeW=Math.min(W*0.7,320);
+    // Calculate total height: candles(50) + top(38) + middle(45) + bottom(55) + plate(20) + padding(30)
+    const cakeH=50+38+45+55+20+30;
+    cc.width=cakeW*2;cc.height=cakeH*2;
+    cc.style.width=cakeW+'px';cc.style.height=cakeH+'px';
+    const c=cc.getContext('2d');
+    c.scale(2,2);
+    const cx=cakeW/2;
+    // Draw from bottom up
+    let baseY=cakeH-15; // plate bottom with padding
 
     // Plate shadow
-    cctx.beginPath();cctx.ellipse(cx,cy+85,size*0.45,14,0,0,Math.PI*2);
-    cctx.fillStyle='rgba(0,0,0,0.08)';cctx.fill();
+    c.beginPath();c.ellipse(cx,baseY+5,cakeW*0.4,10,0,0,Math.PI*2);
+    c.fillStyle='rgba(0,0,0,0.08)';c.fill();
 
     // Plate
-    cctx.beginPath();cctx.ellipse(cx,cy+75,size*0.42,12,0,0,Math.PI*2);
-    cctx.fillStyle='#f5f5f5';cctx.fill();
-    cctx.strokeStyle='#e0e0e0';cctx.lineWidth=1;cctx.stroke();
+    c.beginPath();c.ellipse(cx,baseY,cakeW*0.38,9,0,0,Math.PI*2);
+    c.fillStyle='#f5f5f5';c.fill();
+    c.strokeStyle='#e0e0e0';c.lineWidth=1;c.stroke();
 
-    // Bottom layer (brown)
-    const bw=size*0.55,bh=55;
-    const g1=cctx.createLinearGradient(cx-bw/2,cy-bh,cx+bw/2,cy);
-    g1.addColorStop(0,'#d2691e');g1.addColorStop(1,'#8b4513');
-    cctx.fillStyle=g1;
-    roundRect(cctx,cx-bw/2,cy-bh,bw,bh,8);cctx.fill();
+    baseY-=2; // cake sits right on plate
 
-    // Dripping icing on bottom
-    cctx.fillStyle='#fff8f0';
-    for(let i=-bw/2+10;i<bw/2-10;i+=22){
-      const dripH=8+Math.random()*14;
-      cctx.beginPath();
-      cctx.arc(cx+i,cy-bh+2,8,0,Math.PI);
-      cctx.rect(cx+i-8,cy-bh-dripH+2,16,dripH);
-      cctx.fill();
+    // Bottom layer
+    const bw=cakeW*0.6,bh=50;
+    let g=c.createLinearGradient(cx-bw/2,baseY-bh,cx+bw/2,baseY);
+    g.addColorStop(0,'#d2691e');g.addColorStop(1,'#8b4513');
+    c.fillStyle=g;roundRect(c,cx-bw/2,baseY-bh,bw,bh,8);c.fill();
+
+    // Dripping icing bottom layer
+    c.fillStyle='#fff8f0';
+    for(let i=-bw/2+12;i<bw/2-10;i+=20){
+      const dH=6+Math.random()*10;
+      c.beginPath();c.arc(cx+i,baseY-bh+2,7,0,Math.PI);c.rect(cx+i-7,baseY-bh-dH+2,14,dH);c.fill();
     }
+
+    baseY-=bh;
 
     // Middle layer
-    const mw=size*0.44,mh=45;
-    const g2=cctx.createLinearGradient(cx-mw/2,cy-bh-mh,cx+mw/2,cy-bh);
-    g2.addColorStop(0,'#cd853f');g2.addColorStop(1,'#a0522d');
-    cctx.fillStyle=g2;
-    roundRect(cctx,cx-mw/2,cy-bh-mh,mw,mh,8);cctx.fill();
+    const mw=cakeW*0.48,mh=40;
+    g=c.createLinearGradient(cx-mw/2,baseY-mh,cx+mw/2,baseY);
+    g.addColorStop(0,'#cd853f');g.addColorStop(1,'#a0522d');
+    c.fillStyle=g;roundRect(c,cx-mw/2,baseY-mh,mw,mh,8);c.fill();
 
-    // Dripping icing on middle
-    cctx.fillStyle='#fff';
-    for(let i=-mw/2+8;i<mw/2-8;i+=18){
-      const dripH=6+Math.random()*10;
-      cctx.beginPath();
-      cctx.arc(cx+i,cy-bh-mh+2,6,0,Math.PI);
-      cctx.rect(cx+i-6,cy-bh-mh-dripH+2,12,dripH);
-      cctx.fill();
+    // Dripping icing middle layer
+    c.fillStyle='#fff';
+    for(let i=-mw/2+10;i<mw/2-8;i+=16){
+      const dH=5+Math.random()*8;
+      c.beginPath();c.arc(cx+i,baseY-mh+2,5,0,Math.PI);c.rect(cx+i-5,baseY-mh-dH+2,10,dH);c.fill();
     }
+
+    baseY-=mh;
 
     // Top layer
-    const tw=size*0.34,th=38;
-    const g3=cctx.createLinearGradient(cx-tw/2,cy-bh-mh-th,cx+tw/2,cy-bh-mh);
-    g3.addColorStop(0,'#deb887');g3.addColorStop(1,'#d2b48c');
-    cctx.fillStyle=g3;
-    roundRect(cctx,cx-tw/2,cy-bh-mh-th,tw,th,8);cctx.fill();
+    const tw=cakeW*0.36,th=34;
+    g=c.createLinearGradient(cx-tw/2,baseY-th,cx+tw/2,baseY);
+    g.addColorStop(0,'#deb887');g.addColorStop(1,'#d2b48c');
+    c.fillStyle=g;roundRect(c,cx-tw/2,baseY-th,tw,th,8);c.fill();
 
     // White icing top
-    cctx.fillStyle='rgba(255,255,255,0.7)';
-    roundRect(cctx,cx-tw/2,cy-bh-mh-th,tw,10,8);cctx.fill();
+    c.fillStyle='rgba(255,255,255,0.7)';
+    roundRect(c,cx-tw/2,baseY-th,tw,9,8);c.fill();
 
     // Decorative dots
-    cctx.fillStyle=t.cg[1];
-    for(let i=-tw/2+12;i<tw/2-6;i+=14){
-      cctx.beginPath();cctx.arc(cx+i,cy-bh-mh-th+22,3,0,Math.PI*2);cctx.fill();
+    c.fillStyle=t.cg[1];
+    for(let i=-tw/2+10;i<tw/2-5;i+=12){
+      c.beginPath();c.arc(cx+i,baseY-th+20,3,0,Math.PI*2);c.fill();
     }
 
+    baseY-=th;
+
     // Candles
-    const candlePositions=[cx-20,cx,cx+20];
-    candlePositions.forEach((x,i)=>{
-      // Candle stick
-      cctx.fillStyle=i===1?'#fff':'#ffe4e1';
-      roundRect(cctx,x-3,cy-bh-mh-th-40,6,40,2);cctx.fill();
-      // Candle stripe
-      cctx.fillStyle=i===1?'#ff69b4':'#ffb6c1';
-      cctx.fillRect(x-3,cy-bh-mh-th-30,6,2);
-      cctx.fillRect(x-3,cy-bh-mh-th-20,6,2);
-      // Flame
-      const fy=cy-bh-mh-th-48;
-      cctx.beginPath();cctx.moveTo(x,fy);
-      cctx.quadraticCurveTo(x+8,fy-14,x,fy-22);
-      cctx.quadraticCurveTo(x-8,fy-14,x,fy);
-      cctx.fillStyle=i===1?'#ffd700':'#ffb347';cctx.fill();
-      // Flame glow
-      const gl=cctx.createRadialGradient(x,fy-10,0,x,fy-10,20);
+    [cx-18,cx,cx+18].forEach((x,i)=>{
+      c.fillStyle=i===1?'#fff':'#ffe4e1';
+      roundRect(c,x-3,baseY-36,6,36,2);c.fill();
+      c.fillStyle=i===1?'#ff69b4':'#ffb6c1';
+      c.fillRect(x-3,baseY-28,6,2);c.fillRect(x-3,baseY-18,6,2);
+      const fy=baseY-42;
+      c.beginPath();c.moveTo(x,fy);c.quadraticCurveTo(x+7,fy-12,x,fy-20);c.quadraticCurveTo(x-7,fy-12,x,fy);
+      c.fillStyle=i===1?'#ffd700':'#ffb347';c.fill();
+      const gl=c.createRadialGradient(x,fy-10,0,x,fy-10,16);
       gl.addColorStop(0,'rgba(255,200,50,0.35)');gl.addColorStop(1,'rgba(255,200,50,0)');
-      cctx.fillStyle=gl;cctx.fillRect(x-20,fy-30,40,40);
+      c.fillStyle=gl;c.fillRect(x-16,fy-26,32,32);
     });
   }
 
