@@ -129,12 +129,19 @@ html,body{height:100%;font-family:'Noto Sans SC',sans-serif;background:var(--bg)
 /* ===== DISPLAY MODE ========== */
 /* ============================= */
 #displayMode{display:none;position:fixed;inset:0;z-index:1000;overflow:hidden}
-#displayMode.show{display:block}
+#displayMode.show{display:flex;flex-direction:column}
 #displayCanvas{position:absolute;inset:0;width:100%;height:100%}
 
-/* Phase container */
-.d-phase{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:3;pointer-events:none;opacity:0;transition:opacity 0.8s ease}
-.d-phase.active{opacity:1}
+/* Scroll container */
+.d-scroll{position:relative;z-index:3;flex:1;overflow-y:auto;scroll-snap-type:y mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.d-scroll::-webkit-scrollbar{display:none}
+
+/* Each page is a full-height snap section */
+.d-phase{min-height:100vh;min-height:100dvh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px 24px;text-align:center;pointer-events:none;scroll-snap-align:start;position:relative}
+
+/* Swipe hint arrow */
+.d-swipe-hint{position:absolute;bottom:30px;left:50%;transform:translateX(-50%);color:rgba(255,255,255,0.5);font-size:13px;pointer-events:none;animation:swipeHint 2s ease-in-out infinite}
+@keyframes swipeHint{0%,100%{opacity:.4;transform:translateX(-50%) translateY(0)}50%{opacity:.7;transform:translateX(-50%) translateY(-8px)}}
 
 /* Phase 1: Hi [name] */
 .d-phase1 .hi-text{font-family:'ZCOOL KuaiLe',cursive;font-size:clamp(36px,10vw,72px);color:#fff;text-shadow:0 0 30px rgba(255,255,255,0.4),0 4px 20px rgba(0,0,0,0.15);opacity:0;letter-spacing:4px}
@@ -144,7 +151,6 @@ html,body{height:100%;font-family:'Noto Sans SC',sans-serif;background:var(--bg)
 .d-phase2 .bd-text{font-family:'ZCOOL KuaiLe',cursive;font-size:clamp(56px,16vw,120px);color:#fff;text-shadow:0 0 50px rgba(255,255,255,0.5),0 6px 30px rgba(0,0,0,0.2);opacity:0;letter-spacing:12px}
 
 /* Phase 3: Blessing content */
-.d-phase3{padding:40px 24px;text-align:center}
 .d-phase3 .p3-cake{opacity:0;margin-bottom:12px}
 .d-phase3 .p3-greeting{font-family:'ZCOOL KuaiLe',cursive;font-size:clamp(28px,8vw,48px);color:#fff;text-shadow:0 4px 20px rgba(0,0,0,0.2);opacity:0;margin-bottom:8px}
 .d-phase3 .p3-name{font-family:'ZCOOL KuaiLe',cursive;font-size:clamp(22px,6vw,38px);color:#fff;text-shadow:0 3px 15px rgba(0,0,0,0.15);opacity:0;margin-bottom:4px}
@@ -259,32 +265,37 @@ html,body{height:100%;font-family:'Noto Sans SC',sans-serif;background:var(--bg)
 <!-- ===== DISPLAY MODE ===== -->
 <div id="displayMode">
   <canvas id="displayCanvas"></canvas>
-  <!-- Phase 1: Hi [name] -->
-  <div class="d-phase d-phase1" id="phase1">
-    <div class="hi-text" id="hiText">Hi</div>
-    <div class="hi-name" id="hiName"></div>
-  </div>
-  <!-- Phase 2: 生日快乐 -->
-  <div class="d-phase d-phase2" id="phase2">
-    <div class="bd-text" id="bdText">生日快乐</div>
-  </div>
-  <!-- Phase 3: Blessing content -->
-  <div class="d-phase d-phase3" id="phase3">
-    <div class="p3-cake" id="p3Cake">🎂</div>
-    <div class="p3-greeting" id="p3Greeting">生日快乐！</div>
-    <div class="p3-name" id="p3Name"></div>
-    <div class="p3-date" id="p3Date"></div>
-    <div class="p3-divider" id="p3Divider"></div>
-    <div class="p3-blessing" id="p3Blessing"></div>
-    <div class="p3-sender" id="p3Sender"></div>
-  </div>
-  <!-- Phase 4: Cake illustration -->
-  <div class="d-phase d-phase4" id="phase4">
-    <div class="cake-wrap" id="cakeWrap">
-      <canvas class="cake-canvas" id="cakeCanvas"></canvas>
+  <div class="d-scroll" id="dScroll">
+    <!-- Phase 1: Hi [name] -->
+    <div class="d-phase d-phase1" id="phase1">
+      <div class="hi-text" id="hiText">Hi</div>
+      <div class="hi-name" id="hiName"></div>
+      <div class="d-swipe-hint">↑ 上滑继续 ↑</div>
     </div>
-    <div class="cake-text" id="cakeText">Happy Birthday!</div>
-    <button class="cake-like" id="cakeLike">🤍 喜欢</button>
+    <!-- Phase 2: 生日快乐 -->
+    <div class="d-phase d-phase2" id="phase2">
+      <div class="bd-text" id="bdText">生日快乐</div>
+      <div class="d-swipe-hint">↑ 上滑继续 ↑</div>
+    </div>
+    <!-- Phase 3: Blessing content -->
+    <div class="d-phase d-phase3" id="phase3">
+      <div class="p3-cake" id="p3Cake">🎂</div>
+      <div class="p3-greeting" id="p3Greeting">生日快乐！</div>
+      <div class="p3-name" id="p3Name"></div>
+      <div class="p3-date" id="p3Date"></div>
+      <div class="p3-divider" id="p3Divider"></div>
+      <div class="p3-blessing" id="p3Blessing"></div>
+      <div class="p3-sender" id="p3Sender"></div>
+      <div class="d-swipe-hint">↑ 上滑继续 ↑</div>
+    </div>
+    <!-- Phase 4: Cake illustration -->
+    <div class="d-phase d-phase4" id="phase4">
+      <div class="cake-wrap" id="cakeWrap">
+        <canvas class="cake-canvas" id="cakeCanvas"></canvas>
+      </div>
+      <div class="cake-text" id="cakeText">Happy Birthday!</div>
+      <button class="cake-like" id="cakeLike">🤍 喜欢</button>
+    </div>
   </div>
   <button class="display-replay" id="displayReplay">🔄 再看一次</button>
   <button class="display-music" id="displayMusic" title="音乐">🎵</button>
@@ -565,16 +576,11 @@ function startDisplayMode(){
   $('p3Blessing').textContent=displayData.blessing;
   $('p3Sender').textContent=`—— 来自 ${displayData.sender} 的祝福`;
 
-  // Reset all phases
-  ['phase1','phase2','phase3','phase4'].forEach(id=>{
-    $(id).classList.remove('active');
-    $(id).querySelectorAll('[style*="animation"]').forEach(el=>{el.style.animation='';el.style.opacity='0'});
+  // Reset all phases - clear inline animation styles
+  ['hiText','hiName','bdText','p3Cake','p3Greeting','p3Name','p3Date','p3Divider','p3Blessing','p3Sender','cakeWrap','cakeText','cakeLike'].forEach(id=>{
+    const el=$(id);
+    if(el){el.style.cssText='';el.style.opacity='0'}
   });
-  // Reset individual elements
-  ['hiText','hiName'].forEach(id=>{$(id).style.animation='';$(id).style.opacity='0'});
-  ['bdText'].forEach(id=>{$(id).style.animation='';$(id).style.opacity='0'});
-  ['p3Cake','p3Greeting','p3Name','p3Date','p3Divider','p3Blessing','p3Sender'].forEach(id=>{$(id).style.animation='';$(id).style.opacity='0'});
-  ['cakeWrap','cakeText','cakeLike'].forEach(id=>{$(id).style.animation='';$(id).style.opacity='0'});
 
   $('displayReplay').classList.remove('show');$('displayReplay').style.display='none';
 
@@ -733,70 +739,65 @@ function startDisplayMode(){
     });
   }
 
-  // Phase management
-  let currentPhase=0; // 0=none, 1=hi, 2=birthday, 3=blessing, 4=cake
-  let phaseStartTime=0;
-  const phaseTimings=[3000, 3500, 0, 0]; // auto-advance per phase: phase1=3s, phase2=3.5s, phase3=tap, phase4=none
+  // Phase management - scroll-based
+  let currentPhase=0;
+  const phaseAnimated={1:false,2:false,3:false,4:false};
 
-  function showPhase(phaseNum){
-    currentPhase=phaseNum;
-    phaseStartTime=Date.now();
-    // Hide all phases
-    ['phase1','phase2','phase3','phase4'].forEach(id=>{$(id).classList.remove('active')});
+  function animatePhase(phaseNum){
+    if(phaseAnimated[phaseNum])return;
+    phaseAnimated[phaseNum]=true;
 
     if(phaseNum===1){
-      $('phase1').classList.add('active');
-      setTimeout(()=>{$('hiText').style.animation='popIn 0.8s ease forwards'},200);
-      setTimeout(()=>{$('hiName').style.animation='popIn 0.8s 0.4s ease forwards'},400);
+      setTimeout(()=>{$('hiText').style.cssText='animation:popIn 0.8s ease forwards'},200);
+      setTimeout(()=>{$('hiName').style.cssText='animation:popIn 0.8s ease forwards'},500);
       spawnBurst(W/2,H*0.3,50);
-      scheduleNext(1); // auto -> phase 2 after 3s
     }
     else if(phaseNum===2){
-      $('phase2').classList.add('active');
-      setTimeout(()=>{$('bdText').style.animation='popIn 0.9s ease forwards';$('bdText').style.animation='popIn 0.9s ease forwards, textGlow 3s 1s ease-in-out infinite'},100);
+      setTimeout(()=>{$('bdText').style.cssText='animation:popIn 0.9s ease forwards, textGlow 3s 1s ease-in-out infinite'},100);
       spawnBurst(W/2,H*0.35,60);
       setTimeout(()=>spawnBurst(W*0.25,H*0.25,35),400);
       setTimeout(()=>spawnBurst(W*0.75,H*0.25,35),600);
-      scheduleNext(2); // auto -> phase 3 after 3.5s
     }
     else if(phaseNum===3){
-      $('phase3').classList.add('active');
-      setTimeout(()=>{$('p3Cake').style.animation='popIn 0.6s ease forwards'},100);
-      setTimeout(()=>{$('p3Greeting').style.animation='slideInUp 0.6s ease forwards'},300);
-      setTimeout(()=>{$('p3Name').style.animation='slideInUp 0.6s 0.15s ease forwards'},450);
-      setTimeout(()=>{$('p3Date').style.animation='slideInUp 0.6s 0.3s ease forwards'},600);
-      setTimeout(()=>{$('p3Divider').style.animation='fadeIn 0.5s 0.5s ease forwards'},700);
-      setTimeout(()=>{$('p3Blessing').style.animation='slideInUp 0.6s 0.6s ease forwards'},800);
-      setTimeout(()=>{$('p3Sender').style.animation='slideInUp 0.6s 0.9s ease forwards'},1000);
+      setTimeout(()=>{$('p3Cake').style.cssText='animation:popIn 0.6s ease forwards'},100);
+      setTimeout(()=>{$('p3Greeting').style.cssText='animation:slideInUp 0.6s ease forwards'},300);
+      setTimeout(()=>{$('p3Name').style.cssText='animation:slideInUp 0.6s ease forwards'},450);
+      setTimeout(()=>{$('p3Date').style.cssText='animation:slideInUp 0.6s ease forwards'},600);
+      setTimeout(()=>{$('p3Divider').style.cssText='animation:fadeIn 0.5s ease forwards'},700);
+      setTimeout(()=>{$('p3Blessing').style.cssText='animation:slideInUp 0.6s ease forwards'},800);
+      setTimeout(()=>{$('p3Sender').style.cssText='animation:slideInUp 0.6s ease forwards'},1000);
       spawnBurst(W/2,H*0.2,45);
-      // Phase 3 stays until user taps
     }
     else if(phaseNum===4){
       drawCakeIllustration();
-      $('phase4').classList.add('active');
-      setTimeout(()=>{$('cakeWrap').style.animation='popIn 0.8s ease forwards'},200);
-      setTimeout(()=>{$('cakeText').style.animation='slideInUp 0.6s 0.5s ease forwards'},500);
-      setTimeout(()=>{$('cakeLike').style.animation='fadeIn 0.5s 1s ease forwards'},1000);
-      setTimeout(()=>{$('displayReplay').style.display='block';setTimeout(()=>$('displayReplay').classList.add('show'),100)},1500);
+      setTimeout(()=>{$('cakeWrap').style.cssText='animation:popIn 0.8s ease forwards'},200);
+      setTimeout(()=>{$('cakeText').style.cssText='animation:slideInUp 0.6s ease forwards'},500);
+      setTimeout(()=>{$('cakeLike').style.cssText='animation:fadeIn 0.5s ease forwards'},1000);
+      setTimeout(()=>{
+        $('displayReplay').style.display='block';
+        setTimeout(()=>$('displayReplay').classList.add('show'),100);
+      },1500);
       spawnBurst(W/2,H*0.3,55);
     }
   }
 
-  // Auto-advance: chain phases via setTimeout inside showPhase
-  let autoTimer=null;
-
-  function scheduleNext(phaseNum){
-    clearTimeout(autoTimer);
-    const dur=phaseTimings[phaseNum-1];
-    if(dur>0){
-      autoTimer=setTimeout(()=>{
-        if(currentPhase===phaseNum) showPhase(phaseNum+1);
-      },dur);
+  // Scroll snap detection - find which phase is visible
+  const scrollEl=$('dScroll');
+  function onScroll(){
+    const scrollY=scrollEl.scrollTop;
+    const phaseH=window.innerHeight;
+    const newPhase=Math.round(scrollY/phaseH)+1;
+    if(newPhase!==currentPhase && newPhase>=1 && newPhase<=4){
+      currentPhase=newPhase;
+      animatePhase(newPhase);
     }
   }
+  scrollEl.addEventListener('scroll',onScroll,{passive:true});
 
-  // Start with Phase 1
-  showPhase(1);
+  // Start: scroll to top and animate phase 1
+  scrollEl.scrollTop=0;
+  currentPhase=1;
+  setTimeout(()=>animatePhase(1),300);
 
   // Like button
   $('cakeLike').onclick=function(e){
@@ -808,16 +809,6 @@ function startDisplayMode(){
       this.classList.remove('liked');this.textContent='🤍 喜欢';
     }
   };
-
-  // Tap to advance (for phases without auto-advance)
-  $('displayMode').addEventListener('click',e=>{
-    if(e.target.id==='displayReplay'||e.target.id==='displayMusic'||e.target.id==='cakeLike')return;
-    if(currentPhase===3){
-      showPhase(4);
-    }else if(currentPhase===4){
-      // Already at last phase, do nothing
-    }
-  });
 
   // Animation loop
   let frame=0;
@@ -875,6 +866,9 @@ function startDisplayMode(){
 $('displayReplay').addEventListener('click',()=>{
   if(displayAnim)cancelAnimationFrame(displayAnim);
   stopMusicLoop();
+  // Reset scroll position for fresh start
+  const se=$('dScroll');
+  if(se) se.scrollTop=0;
   startDisplayMode();
 });
 
