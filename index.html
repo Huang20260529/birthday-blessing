@@ -754,6 +754,7 @@ function startDisplayMode(){
       setTimeout(()=>{$('hiText').style.animation='popIn 0.8s ease forwards'},200);
       setTimeout(()=>{$('hiName').style.animation='popIn 0.8s 0.4s ease forwards'},400);
       spawnBurst(W/2,H*0.3,50);
+      scheduleNext(1); // auto -> phase 2 after 3s
     }
     else if(phaseNum===2){
       $('phase2').classList.add('active');
@@ -761,6 +762,7 @@ function startDisplayMode(){
       spawnBurst(W/2,H*0.35,60);
       setTimeout(()=>spawnBurst(W*0.25,H*0.25,35),400);
       setTimeout(()=>spawnBurst(W*0.75,H*0.25,35),600);
+      scheduleNext(2); // auto -> phase 3 after 3.5s
     }
     else if(phaseNum===3){
       $('phase3').classList.add('active');
@@ -772,6 +774,7 @@ function startDisplayMode(){
       setTimeout(()=>{$('p3Blessing').style.animation='slideInUp 0.6s 0.6s ease forwards'},800);
       setTimeout(()=>{$('p3Sender').style.animation='slideInUp 0.6s 0.9s ease forwards'},1000);
       spawnBurst(W/2,H*0.2,45);
+      // Phase 3 stays until user taps
     }
     else if(phaseNum===4){
       drawCakeIllustration();
@@ -784,24 +787,21 @@ function startDisplayMode(){
     }
   }
 
-  // Auto-advance timer
-  let autoAdvanceTimer=null;
-  function scheduleAutoAdvance(phaseNum){
-    clearTimeout(autoAdvanceTimer);
-    if(phaseTimings[phaseNum-1]>0){
-      autoAdvanceTimer=setTimeout(()=>{
+  // Auto-advance: chain phases via setTimeout inside showPhase
+  let autoTimer=null;
+
+  function scheduleNext(phaseNum){
+    clearTimeout(autoTimer);
+    const dur=phaseTimings[phaseNum-1];
+    if(dur>0){
+      autoTimer=setTimeout(()=>{
         if(currentPhase===phaseNum) showPhase(phaseNum+1);
-      },phaseTimings[phaseNum-1]);
+      },dur);
     }
   }
 
   // Start with Phase 1
   showPhase(1);
-  scheduleAutoAdvance(1);
-  // After phase 1 -> phase 2
-  setTimeout(()=>scheduleAutoAdvance(2),100);
-  // After phase 2 -> phase 3
-  setTimeout(()=>scheduleAutoAdvance(3),200);
 
   // Like button
   $('cakeLike').onclick=function(e){
